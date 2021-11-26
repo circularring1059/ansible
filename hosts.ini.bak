@@ -11,10 +11,10 @@ master3 ansible_host=192.168.66.100
 192.168.98.100 ansible_host=192.168.98.100 port=27018 ansible_ssh_pass="1"
 
 [wz]
-master1 ansible_host=192.168.10.173  ansible_ssh_pass="Ricemap123" ip=172.0.18.1 testvar=var_host var3="hello" var4="world"
+master1 ansible_host=192.168.10.173  ansible_ssh_pass="unknow" ip=172.0.18.1 testvar=var_host var3="hello" var4="world"
 
 [ks]
-master3 ansible_host=192.168.10.86  ansible_ssh_pass="Ricemap123" ip=172.0.18.1 testvar=var_host
+master3 ansible_host=192.168.10.86  ansible_ssh_pass="unknow" ip=172.0.18.1 testvar=var_host
 
 #定义一组变量
 [all:vars]  # all  里面所有主句共享
@@ -32,4 +32,4 @@ var4="world"
 192.168.10.44 ansible_host=192.168.10.44 ip=192.168.10.44
 
 [all:vars]
-ansible_ssh_pass="Ricemap123"
+ansible_ssh_pass="unknow"

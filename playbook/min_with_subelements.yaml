@@ -1,0 +1,27 @@
+---
+- hosts: wz
+  remote_user: root
+  tasks:
+  - debug: 
+      msg: "{{person.ring}}--{{person['ring']}}"
+    name: this is a debug
+  - debug:
+      msg: "{{item}}"
+    with_subelements:
+    - "{{ pet }}"
+    - hobby
+  vars:
+    person:
+      ring: yuan
+    pet:
+      - name: "cat"
+        gender: male
+        hobby:
+        - run
+        - catch mice 
+      - name: "dog"
+        gender: female
+        hobby:
+        - jump
+        
+          

@@ -1,0 +1,69 @@
+#宏 类似函数
+{% macro func() %}
+  print something  here
+{% endmacro %}
+{{ func() }}
+
+{% macro func1(arg1, arg2) %}
+   this var from  template {{arg1}}
+   this var from main.yaml  {{arg2}}
+{%  endmacro %}
+{% set var11="Get  somethin" %}
+{{ func1(var11, var22)}}
+
+{% macro func2(arg1, arg2="FPGA") %}
+    {{arg1}}--- {{arg2}}
+{% endmacro %}
+
+{{ func2(arg1="HELLO",arg2="HLLEO") }}
+{% macro testfunc(tv1,tv2=2,tv3=3) %}
+  test string
+  {{tv1}}
+  {{tv2}}
+  {{tv3}}
+{% endmacro %}
+ 
+{{ testfunc( 111,tv3='ccc' ) }}
+
+# 有三个默认的内置特殊变量可供我们使用，它们分别是varargs、kwargs、caller，和python 差不多 varargs 接收多余的参数
+{% macro  func3(arg1,arg2) %}
+    {{arg1}}{{ arg2}}
+    {{ varargs }} #(3,4,5,6)
+{%  endmacro %}
+{{  func3(1,2,3,4,5,6) }}
+
+#kwargs
+{% macro func4() %}
+    {{varargs}}  #元组(1,3)
+    {{kwargs}}  #字典 {'one':'two', 'three':'four'}
+{%  endmacro %}
+
+{{ func4(1,3,one="two",three="four")}}
+
+
+#caller  装饰器？带上caller 的函数就不需要手动执行
+{% macro func5() %} 
+   this is a func 
+    {{caller()}}
+{%  endmacro %}
+
+{% macro  func6() %}
+   this is func6
+{% endmacro %}
+
+{%call func5()%}
+    this is a call
+    {{ func6() }}
+{% endcall%}
+
+name属性：宏的名称。
+
+arguments属性：宏中定义的所有参数的参数名，这些参数名组成了一个元组存放在arguments中。
+
+defaults属性：宏中定义的参数如果有默认值，这些默认值组成了一个元组存放在defaults中。
+
+catch_varargs属性：如果宏中使用了varargs变量，此属性的值为true。
+
+catch_kwargs属性： 如果宏中使用了kwargs变量，此属性的值为true。
+
+caller属性：如果宏中使用了caller变量，此属性值为true。

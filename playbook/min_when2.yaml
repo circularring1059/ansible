@@ -1,0 +1,27 @@
+---
+- hosts: wz
+  remote_user: root
+  tasks:
+  - debug: 
+      msg: "this is debug1"
+  - debug:
+      msg: "this is debug2"
+  #- fail: #阻断执行,主动自造错误
+  #    msg: "raise error"
+  - debug:
+      msg: "this is debug3"
+  - shell: "echo error"
+    register: result
+  #- fail:
+  #    msg: "显示抛出错误"
+  #  when:  "'error' in  result.stdout"
+  - debug:
+      msg: ">>>>>>"
+  - shell: "echo  error this is err"
+    register: result
+    #failed_when: '"erroz" not in result.stdout'
+  - debug:
+       msg: "test mesage"
+    changed_when: 3 > 2  #将状态修改changed
+  - shell: "pwd"
+    changed_when: false   #默认情况下执行shell 后状态都是changed,这里强行改变

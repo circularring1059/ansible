@@ -1,0 +1,13 @@
+---
+- hosts: "173"
+  remote_user: root
+  tasks:
+  - name: copy file
+    copy: src=/tmp/x.sql dest=/tmp/x.sql
+    notify:
+      test handler again
+  handlers:
+  - name:  test handler
+    shell: echo "hello handlers" >> /tmp/hellohandler
+  - name: test handler again
+    shell: echo "hello handlers" >> /tmp/hellohandler

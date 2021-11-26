@@ -1,0 +1,3 @@
+mongodData: "/data/db/mongo"
+mongoDBUser: "root"
+mongoDBPasswd: "root"

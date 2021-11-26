@@ -1,0 +1,35 @@
+---
+- hosts: wz
+  tasks:
+  - set_fact:
+      var1: "var set from  set_fact"
+  - include: include3.yaml
+  - debug:
+      msg: "{{one}}"  #这里出错，变量没有定义
+    ignore_errors: yes
+  - block:
+    - debug: msg="this is main yaml"
+  - include: include1.yaml
+    #tags: t2
+    #when: false #条件判断可作用于include
+  - include: include2.yaml
+    tags: t1  # tag 也可以作用于include
+  #- debug: msg="{{one}}"
+  - shell: "ls"
+    notify: test
+  - include: var_in_include.yaml
+      var1="var in include"  #incule  里面的任务传参,注意这个变量会被set_fact 覆盖
+  - debug:
+      msg: "get point at here"
+  - set_fact:
+      var1: "F"
+  - include: var_in_include.yaml
+    vars:
+      var1: "hello wrold"  #inculde  里面的任务传参,这个var 不会被覆盖
+  - include: include4.yaml  #循环调用任务
+    loop: [1,2,3,4]
+  - include_tasks: include1.yaml  #这个和include 结果上没有区别，提示信息有区别 
+  handlers:
+  - name: test
+    #include: handlers.yaml  some questions happened here
+    debug: msg=">>>>>>>>>>" 

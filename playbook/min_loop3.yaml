@@ -1,0 +1,33 @@
+---
+- hosts: wz
+  remote_user: root
+  gather_facts: yes
+  name: get fact of wz
+  tasks:
+  - debug: 
+      msg: "index is: {{item.0}}>>value is {{item.1}}"  
+    name: daemon  with_indexed_items  123456 单独一个index 78一起，有点像python 的深浅拷贝
+    with_indexed_items: 
+    - [1, 2, 3]
+    - [4, 5, 6, [7, 8]]
+    - {"one":"two"}
+    tags: index
+  - debug:
+      msg: "ring{{item}}"
+    name: daemon with_sequence  类似python 的ring
+    with_sequence: start=-3 end=5 stride=2   #stride(步长) 默认是1
+  - debug:
+      msg: "count{{item}}"    #产生1-6
+    with_sequence: count=6
+  - debug:
+      msg: "{{item}}"
+    with_sequence:
+      start=9
+      end=-2
+      stride=-2 #当end的值小于start的值时，则必须指定stride的值，而且stride的值必须是负数
+  - debug:
+      msg: "{{item}}"
+    with_sequence: count=6 format="number is %0.2f"   #格式化输出，保留两位小数
+  - debug:
+      msg: "{{item}}"
+    with_random_choice: [1,2,3,4]  #随机获取一个值

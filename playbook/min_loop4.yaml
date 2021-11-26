@@ -1,0 +1,36 @@
+---
+- hosts: wz
+  remote_user: root
+  gather_facts: no
+  name: get fact of wz
+  vars:
+    person:
+      name: 
+        jack: "T"
+      sex: male
+  tasks:
+  - set_fact:
+      person:
+        Ginta:
+          phone: 183943
+          sex: male
+          age: 78
+        lili:
+          phone: 79023
+          sex: female
+          age:  87
+      set: fact
+  - debug:
+      msg: "{{item}}"
+    with_dict: "{{person}}"  #这里person 得是个字典
+  - debug: 
+      msg: "(key) is: {{item.key}}>>(value) is {{item.value}}"  
+    with_dict: "{{person}}" 
+  - debug:
+      msg: "name is {{item.key}}, sex is {{item.value.sex}}, age is {{item.value.age}}"
+    with_dict: "{{person}}"
+  - debug:
+      msg: "{{person}}"
+    name: debug
+  - shell: "touch /tmp/{{set}}"
+    name: papa

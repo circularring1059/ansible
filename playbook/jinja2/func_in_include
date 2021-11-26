@@ -1,0 +1,12 @@
+{% macro func1() %}  
+     a func1 of include
+{% endmacro %}
+
+{% macro  func2(arg1, arg2) %}
+    {{arg1, "*",arg2}}
+    {{arg1~"*"~arg2}}
+    {% for i in range(3) %}
+         {{i}}
+    {% endfor %}
+{%  endmacro %}
+

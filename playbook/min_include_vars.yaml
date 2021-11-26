@@ -1,0 +1,16 @@
+---
+- hosts: wz
+  remote_user: root
+  tasks:
+  - name: daemon of  include_vars
+    include_vars:
+      file: "./etcd.json" 
+      name: testvar
+  - debug:
+      msg: "{{testvar}}" 
+  - block:
+    - include_vars:
+        file: "./etcd.yaml"
+        name: testvar1
+    - debug:
+        msg: "{{testvar1}}"

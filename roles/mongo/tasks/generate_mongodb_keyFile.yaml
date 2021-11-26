@@ -1,0 +1,9 @@
+- set_fact:
+    mongo_Keyfile: "{{role_path~'/files/mongodb-keyfile'}}"
+
+- name: generate mongodb_keyFile 
+  shell: "openssl rand -base64 741 > {{role_path}}/files/mongodb-keyfile"
+  ignore_errors: yes
+  connection: local
+  run_once: yes
+  when: 'mongo_Keyfile is not exists'

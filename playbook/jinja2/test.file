@@ -1,0 +1,18 @@
+#the file use for testing ansible jinja2
+{{name}} 
+{{age}}
+kubectl  get configmaps
+kubectl  get daemonsets
+kubectl  get endpoints
+{{ 1==1 }}  #true
+{{ 1 > 2 }}  #false
+{{ ( 1 > 2 )  or (2<3) }}
+{{ "abc"  |  upper }}
+{{ not  true }}
+{{ 3/2 }}
+{{ 1 in [1,2,3,4] }}
+{{ 3 // 2 }}
+{{ 10 // 3 }}
+{{ 4*5}}
+{{ '/op' is exists }} # 判断的是 ansilbe 主机上的
+{# 注释 #}

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: etcd
+  name: etcd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: etcd
+  template:
+    metadata:
+      labels:
+        app: etcd
+    spec:
+      hostNetwork: True
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+      - image: registry.aliyuncs.com/google_containers/etcd:3.4.3-0
+        name: etcd

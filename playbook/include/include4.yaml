@@ -1,0 +1,5 @@
+- debug:
+    msg:  "{{item}} task1 in include4.yaml"
+
+- debug:
+    msg: "{{item}} task2 in include4.yaml"

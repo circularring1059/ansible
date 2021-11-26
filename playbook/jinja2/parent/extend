@@ -1,0 +1,18 @@
+who are you 
+I ams fine
+thank 
+{% block  test1 %}
+{%  endblock %}
+
+{% block  test2  %}
+     test2
+{% endblock %}
+
+extend  end
+#调用自身的blck  学着学着发现趋近相通
+{{ self.test2() }}
+
+
+{% block test3 %} 
+   test3
+{% endblock %}

@@ -1,0 +1,39 @@
+---
+- hosts: wz
+  remote_user: root
+  gather_facts: yes
+  name: get fact of wz
+  tasks:
+  - debug: 
+      msg: "{{item}}"  #return array get the second
+    with_items:  #这里会拆成7个item   
+    - [1, 2, 3]
+    - [4, 5, 6]
+    - {"one":"two"}
+  - debug:
+      msg: "{{item}}" # 这里是3个
+    with_list:
+    - [1, 2, 3]
+    - [4, 5, 6]
+    - {"z":'h'}
+  - debug:
+      msg: "{{item}}"
+    name: daemon flattened   功能好像和with_items 没啥区别
+    with_flattened:
+    - [1, 2, 3]
+    - [4, 5, 6]
+    - {"one":"two"}
+  - debug: 
+      msg: "{{item}}"
+    name: daemon  with_together 3 和null 和9成为一对 有点像python zip 函数
+    with_together:
+    - [1, 2, 3]
+    - [4, 5, ]
+    - [7, 8, 9]
+  - name: daemon with_cartesian 
+    #debug:
+    #  msg: "{{item}}"  #产生A1 A2 A2....C1 C2 C3
+    shell: "mkdir -p /tmp/{{item.0}}/{{item.1}}"
+    with_cartesian:
+    - ["A", "B", "C"]
+    - [1, 2, 3]

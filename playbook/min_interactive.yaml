@@ -1,0 +1,36 @@
+---
+- hosts: "wz"
+  remote_user: root
+  vars_prompt:
+   - name: "your_name"
+     prompt: "waht is your name"
+     private: no #表示输入时不隐藏
+   - name: "age"
+     prompt: "what is your age"
+   - name: "choose"
+     prompt: "choose one  of them \n
+     A: one\n
+     B: two\n
+     C: three\n"
+     default: A
+     private: no
+   - name: "isDelete"
+     prompt: "choose y or n \n
+     n: not delete\n
+     y: delete\n"
+     default: n
+     private: no
+  tasks:
+  - name: input
+    debug:
+     msg:  "{{ your_name}}, your:{{ age}}"   
+  - name: choose
+    debug:
+     msg: "{{ isDelete }}" 
+  #- name: test vars_prompt
+  #  debug:
+  #   msg: "XXX"
+    #vars_prompt:
+    #- name: "name"
+    #  prompt: "your_name"
+    #  private: no

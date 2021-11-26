@@ -1,0 +1,36 @@
+---
+- hosts: "173"
+  remote_user: root
+  tasks:
+  - name: ping host
+    ping:
+  - name: mkdir /tmp/ansible-play/book
+    file:
+     path: /tmp/ansible-play/book
+     state: directory
+  - name: copy /opt/git   /tmp/ansible-play/book
+    copy:
+     src: /opt/ssl/
+     dest: /tmp/ansible-play/book
+    tags: yuan,ring
+  - name:  create  file use other  way
+    #这几种写法都是可以的，注意缩进
+    #file: path=/tmp/ansible/file  state=touch mode=0777
+    #file: path=/tmp/ansible/file
+    #      state=touch
+    #      mode=0777
+    #file: path=/tmp/ansible/file 
+    #      state=touch mode=0777
+    action: file path=/tmp/ansible-play/file state=touch
+    tags:
+    - one
+    - two
+#- hosts: "173,all"
+- hosts: 
+    "all"
+  remote_user: root
+  tasks:
+  - name: ping
+    ping:
+    tags: ["three","four"]
+

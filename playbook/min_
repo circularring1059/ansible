@@ -1,0 +1,50 @@
+---
+- hosts: "173"
+  remote_user: root
+  tasks:
+  - name: ping host
+    ping:
+  - name: mkdir /tmp/ansible-play/book
+    file:
+     path: /tmp/ansible-play/book
+     state: directory
+  - name: copy /opt/git   /tmp/ansible-play/book
+    copy:
+     src: /opt/ssl/
+     dest: /tmp/ansible-play/book
+    tags: yuan,ring
+  - name:  create  file use other  way
+    #这几种写法都是可以的，注意缩进
+    #file: path=/tmp/ansible/file  state=touch mode=0777
+    #file: path=/tmp/ansible/file
+    #      state=touch
+    #      mode=0777
+    #file: path=/tmp/ansible/file 
+    #      state=touch mode=0777
+    action: file path=/tmp/ansible-play/file state=touch
+    tags:
+    - one
+    - two
+  - name: shell  echo 
+    shell:  echo  "I am  shell  echo" #不会输出该信息
+#- hosts: "173,all"
+- hosts: 
+    "all"
+  remote_user: root
+  #定义一个var debug  输出
+  vars:
+    echo: "i am dubug like echo"
+  tasks:
+  - name: debug daemon
+    debug:
+     msg: "输出信息，类似ehco"
+  - name:  debug vars
+    debug: 
+     msg: vars is {{ echo }}  #引号可要可不要
+  - name: use debug  output vars 
+    debug:
+     msg: "memory info: {{ ansible_memory_mb }}" #内容中出现了: 必须用引号
+  - name: use  debug   get memory real or othters
+    debug:
+     msg: "memory total: {{ ansible_memory_mb.real.total }}"  #和下面这种写法是一样的效果
+     #msg: "memory real: {{ ansible_memory_mb['real']['total'] }}"

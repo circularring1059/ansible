@@ -1,0 +1,15 @@
+---
+- hosts: wz
+  remote_user: root
+  tasks:
+  - debug: 
+      msg: "{{item}}"
+    with_file:  #read file content
+    - ./min_
+    - /root/ansible/ansible.cfg
+  - debug:
+      msg: "{{ item }}"
+    name: "&&&&&&&&&&&&&&"
+    with_fileglob:
+    - /tmp/*    #只能list file  no directory
+    - ./min_*.???  #can match  min_yml min_abc ....(with some questions)

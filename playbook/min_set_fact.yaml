@@ -1,0 +1,31 @@
+---
+- hosts: "173"
+  remote_user: root
+  vars:
+    one: "two"
+  tasks:
+  - name: input
+    #在每个任务定义变量
+    vars: 
+      your_name: "jack"
+      age: 10
+    debug:
+     msg:  "{{ your_name}}, your:{{ age}}"   
+  - name: daemon set_fact #前面的任务不呢能引用这后面定义的var
+    set_fact:
+      ring: "ginr"
+      s: "x"
+
+  - name: print vars
+    debug:
+     msg: "{{ring}} {{s}}"
+  - name: shell
+    shell: echo shell hello world
+    register: shellreturn
+  - name: use var define var
+    set_fact:
+      var1: "{{one}}"
+      var2: "{{shellreturn.stdout}}"
+  - name: print var
+    debug:
+      msg: "{{var1}} {{var2}}"

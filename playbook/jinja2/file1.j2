@@ -1,0 +1,179 @@
+jinj2 模板语法
+{% if 3 > 2 %}
+ output 
+{% endif %}
+
+{%  if   6 > 7 %}
+    6 > 7 
+{%  elif  8 <9 %}
+      8 <9 
+{% else %}
+    no
+{% endif %}
+
+{{ "yuan"  if  1 > 2 else "ring" }}  #yuan  ring  都要用引号，否则看成变量
+#模板中设置变量
+{% set teststr='abc' %}
+{{ teststr }}
+
+{% if var1 %}
+变量 var1  存在
+{% endif %}
+
+#for 循环
+{% for i in  [1,2,3,4,5] %}
+{{ i }}
+{% endfor %}
+#不会换行
+{% for i in  [1,2,3,4,5] -%}
+{{ i }}
+{%- endfor %}
+
+#空一格
+{% for i in  [1,2,3,4,5] -%}
+{{ i }}{{ " " }}  {{i ~ " "}}
+{%- endfor %}
+#拼接
+{% for i in  [1,2,3,4,5] -%}
+{{ i~"***" }}
+{%- endfor %}
+
+
+#循环字典
+{% for k, v in {"one":"two", "three":"four"}.iteritems() %}
+{{ k~":"~v }}
+{% endfor %}
+{% for _, v in {"one":"two", "three":"four"}.iteritems() %}
+{{ v }}
+{% endfor %}
+
+#loop 这里index 是出1 开始的
+{% for i in [1,2,3,4] %}
+{{ i ~ " index is "~ loop.index}}
+{% endfor%}
+{#
+loop.index   当前循环操作为整个循环的第几次循环，序号从1开始
+loop.index0   当前循环操作为整个循环的第几次循环，序号从0开始
+loop.revindex  当前循环操作距离整个循环结束还有几次，序号到1结束
+loop.revindex0 当前循环操作距离整个循环结束还有几次，序号到0结束
+loop.first    当操作可迭代对象中的第一个元素时，此变量的值为true
+loop.last    当操作可迭代对象中的最后一个元素时，此变量的值为true
+loop.length   可迭代对象的长度
+loop.depth   当使用递归的循环时，当前迭代所在的递归中的层级，层级序号从1开始
+loop.depth0   当使用递归的循环时，当前迭代所在的递归中的层级，层级序号从0开始
+loop.cycle()  这是一个辅助函数，通过这个函数我们可以在指定的一些值中进行轮询取值，具体参考之后的示例
+#}
+
+{% for i in range(5) %}
+   "i is:"{{i}}
+{% endfor %}
+{# 不会输入5  和python 一样#}
+{% for i in range(2, 5, 1) %}
+   {{ i}}
+{% endfor %}
+{% for i in [1,2,3,4,5,6] if i > 3%}
+{{ i }}
+{# 这个else 似乎没有生效#}
+{% else %}
+  **********8
+{% endfor %}
+
+
+
+#区别
+{% for i in [7,1,5,3,9] if i>3 %}
+{{ i ~'----'~ loop.index }}
+{% endfor %}
+ 
+{% for i in [7,1,5,3,9] %}
+{% if i>3 %}
+{{ i ~'----'~ loop.index}}
+{% endif %}
+{% endfor %} 
+
+
+
+{% for i  in  userlist.values() %}
+ {{ i.name }} {{i['age']}}
+ {{ "name is: "~ i.name~",age is:"~ i['age']}}
+{% else  %}
+  no one 
+{% endfor %}
+
+
+{% for u in userlistit %}
+  {{ u.name }}
+{%else%}
+  no one
+{% endfor %}
+
+
+#轮流分组
+{% set personlist = ['bobo', 'vovo', 'get', 'lost', 'start', 'end'] %}
+{% for i in personlist %}
+   {{ i~">>>>>>>"~loop.cycle("group1", "group2")}}
+{% endfor %}
+
+#使用扩展支持for 循环中 break continue 需要在配置文件中开启
+jinja2_extensions = jinja2.ext.do,jinja2.ext.i18n,jinja2.ext.loopcontrols
+{% for i in [1,2,3,4,5,6,7] %}
+  {% if i >  6 %}
+      {%break%}
+ {% endif %}
+{# 输出i缩进多少行是由上面的if 决定的#}
+*{{i}}
+{%  endfor %}
+{% for i in [1,2,3,4,5,6] %}
+{% if loop.index < 5 %}
+      {%continue%}
+{% endif %}
+{{i}}
+{% endfor %}
+
+
+
+{% for i in [7,1,5,3,9] %}
+  {% if loop.index is even %}
+    {%continue%}
+  {%endif%}
+  {{ i ~'----'~ loop.index }}
+{% endfor %}
+
+
+#列表操作，修改变量
+{%set list1=[1,2,3] %}
+{% for i in list1 %}
+   {{i}}
+{% endfor %}
+
+{%do list1.append(6)  %}
+{% for i in list1 %}
+{{i}}
+{% endfor %}
+
+
+#原生
+{{  '{{' }}
+{{  '}}' }}
+{{ '{{ test string }}' }}
+{{ '{% test string %}' }}
+{{ '{# test string #}' }}
+
+
+{% raw %}
+  {{ test }}
+  {% test %}
+  {# test #}
+  {% if %}
+  {% for %}
+{% endraw %}
+
+
+{% set test='abc' %}
+ 
+(( test ))  abc
+ 
+{{ test }}  #原样(有问题)
+{{ test }}  #原样
+{{ 'test' }}  #原样
+{{ 'test1' }}  #原样

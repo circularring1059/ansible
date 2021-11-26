@@ -1,0 +1,34 @@
+---
+- hosts: wz
+  remote_user: root
+  gather_facts: yes
+  name: get fact of wz
+  tasks:
+  - debug: 
+      #msg: "{{groups.ungrouped }}"  #return array
+      msg: "{{groups.ungrouped[1] }}"  #return array get the second
+  - debug:
+      msg: "{{item}}"  #循环输出，这里就要写item  其他的不行
+    with_items: "{{groups.ungrouped}}"
+  - debug:
+      msg: "{{item}}"
+    #with_items: ["A", 1, 'c'] #两中写法都可以,如果里面的元素是一个字典，那可以通过.或者[]取其value
+    with_items:
+    - A
+    - 9
+    - "v"
+  - debug:
+      msg: "{{item}}"  #字典也可以循环，拿到是key  和python一样
+    with_items: {"a":"get", 'b':"lose"}
+  - shell: "{{item}}"   #循环调用命令
+    register: shellreturn   #每次执行后以追加的方式写入到注册变量中
+    with_items:
+    - "pwd"
+    - "ls" 
+  - debug:
+      var: shellreturn
+  - debug: 
+      msg:  # 结果追加在叫result 的数组中
+        "{% for i in shellreturn.results %}
+           {{  i.stdout }}
+        {% endfor%}"

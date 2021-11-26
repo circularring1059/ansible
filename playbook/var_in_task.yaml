@@ -1,0 +1,20 @@
+---
+- hosts: wz
+  name: 这行可以省略
+  remote_user: root
+  vars:
+    var1: get
+  tasks:
+    - set_fact:
+        var1: "fact_T"
+    - name: debug
+      vars:
+        var1: "one"
+      debug:
+        msg: "{{var1}}"
+    - name: touch file
+      vars:
+        get: "one"
+      file: 
+       path=/tmp/na
+       state=touch

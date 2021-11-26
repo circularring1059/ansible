@@ -1,0 +1,10 @@
+- block:
+  - service:
+      name: mongod
+      state: stopped
+  - file:
+      path: "{{mongodData}}"
+      state: absent
+  - shell: "rpm -qa |  grep mongodb | xargs rpm -e  --nodeps"
+  ignore_errors: yes
+  tags: never

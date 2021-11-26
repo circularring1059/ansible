@@ -1,0 +1,53 @@
+---
+- hosts: wz
+  remote_user: root
+  vars:
+    testpath: /tm
+    #var1: 
+  tasks:
+  - debug:
+      msg: "tmp dir is exists"
+    when: '"/tmp/mysql.sock" is  exists'  #是个文件就行,连接文件,普通文件,目录文件... 这里要注意用引号
+  - debug:
+      msg: "{{testpath}} is exists"
+    #when:  "testpath is exists"  #判断的都是ansible 上的目录，这里用不用引号都是可以的
+    #when:  "not testpath is exists"  #前面加个not 取反
+    when:  testpath is not exists  #取反 和上面相同
+#defined ：判断变量是否已经定义，已经定义则返回真
+#
+#undefind ：判断变量是否已经定义，未定义则返回真
+#
+#none ：判断变量值是否为空，如果变量已经定义，但是变量值为空，则返回真
+  - debug:
+      msg: "testpath:/tm is defined"
+    when: testpath is defined
+  - debug:
+      msg: "test1path is not defined"
+    when: test1path is undefined
+  - debug:
+      msg: "var1 is defined  but a none"
+    when: var1 is not none  #注意：空字符串不等于none 并且这个var1 是要先定义的,没定义的变量会触发报错
+  - debug:
+     msg: "var1:{{varrr}}>>>>>>>>>>>>>"
+    ignore_errors: true  #这里把true 改成 yes 也是可以的 
+  - debug:
+      msg: "ignore errors"
+  - shell: "ls"
+    register: result
+    ignore_errors: yes
+  - debug:
+      var: result
+  - debug:  
+     msg: "{{result.stdout}}"
+  - debug:
+      msg: "task is success"
+    when: result  is success
+  - debug: 
+      msg: "task is not failed"
+    when: result is not failed
+  - debug: 
+      msg: "task is changed"
+    when: result is changed 
+  - debug: 
+      msg: "task is skip"
+    when: result is skip

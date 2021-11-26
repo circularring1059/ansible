@@ -1,0 +1,14 @@
+---
+- hosts: "173"
+  remote_user: root
+  # 使用 -e 参数进行命令行传参
+  tasks:
+  - name: input
+    debug:
+     msg:  "{{ your_name}}, your:{{ age}}"   
+  - name: choose
+    debug:
+     msg: "{{ choose[0] }}  {{ choose.0}}"  
+  - name: get var  from  file
+    debug:
+     msg: "{{ ring.name }}"

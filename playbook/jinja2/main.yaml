@@ -1,0 +1,32 @@
+---
+- hosts: wz
+  vars:
+    name: zhangshan
+    age:  18
+  tasks:
+  - template:
+      src: ./test.file
+      dest: /tmp/test.file
+      backup: yes
+      mode: 0777
+  - template:
+      src: ./file1.j2 
+      dest: /tmp/file1
+    vars:
+      one: two
+      userlistit: ""
+      userlist:
+        bob:
+          name: bob
+          age: 18
+        lili:
+          name: lili
+          age: 19 
+  - template:
+      src: ./func.file
+      dest: /tmp/func.file
+    vars:
+      var22: "get nothing here"
+  - template:
+      src: ./include1
+      dest: /tmp/include.test

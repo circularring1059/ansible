@@ -1,0 +1,7 @@
+the line  in  include2
+this  is test  of include
+{{ one }}
+{% for i  in range(3) %}
+ {{i}}
+{% endfor %}
+

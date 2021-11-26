@@ -1,0 +1,18 @@
+---
+- hosts: wz
+  remote_user: root
+  gather_facts: yes
+  name: get fact of wz
+  # get facts of 173
+ 
+- hosts: ks
+  name: show fact of wz
+  remote_user: root
+  tasks:
+  - name: print wz facts
+    debug:
+      msg: "{{ hostvars['wz'] }}"
+  - name: debug
+    debug: 
+      msg: "****"
+

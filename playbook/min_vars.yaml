@@ -1,0 +1,50 @@
+---
+- hosts: "wz"
+  remote_user: root
+  vars:
+    one: "1"
+    two: "2"
+    five:
+      test: ok
+  tasks:
+  - name: ping host
+    ping:
+  - name: mkdir /tmp/ansible-play/book
+    file:
+     path: /tmp/ansible-play/book
+     state: directory
+  - name: copy /opt/git   /tmp/ansible-play/book
+    copy:
+     src: /opt/ssl/
+     dest: /tmp/ansible-play/book
+  - name:  create  file use other  way
+    #这几种写法都是可以的，注意缩进
+    #file: path=/tmp/ansible/file  state=touch mode=0777
+    #file: path=/tmp/ansible/file
+    #      state=touch
+    #      mode=0777
+    #file: path=/tmp/ansible/file 
+    #      state=touch mode=0777
+    action: file path=/tmp/ansible-play/file state=touch
+  - name: daemon vars
+    #shell: echo  "{{ one }}"  >>   /tmp/vars_daemon
+    #shell: echo  {{ two }}  >>   /tmp/vars_daemon
+    shell: echo  {{ five.test }}  >>   /tmp/vars_daemon
+- hosts: "wz"
+  remote_user: root
+  vars:
+    one: "two"
+  tasks:
+  #- name: test paller #在一台机器上，这些任务是穿行的 
+  #  shell: sleep 20 
+  - name: test user vars with above
+    shell: echo {{ one }} >> /tmp/var_test   #这里不能使用第一个hosts里定义vars
+- hosts: wz
+  remote_user: root
+  vars_files:
+  - ./vars.yaml  
+  tasks:
+  - name:  vars_files daemon
+    shell: echo "{{ ring.age }}" >>  /tmp/var_test
+  #- debug: 
+  #    msg: "var1:{{varrr}}>>>>>>>"  #引用没有定义的变量会报错

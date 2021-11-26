@@ -1,0 +1,40 @@
+---
+- hosts: kos
+  remote_user: root
+  vars:
+    flag: true
+  tasks:
+  - name: daemon of block #将多个task整合成一个,但依然是串行执行
+    block:
+    - shell: "ls"
+      register: result
+    - debug:
+        msg: "{{result.stdout}}"
+    - debug:
+        var: result 
+  #- name: try fail
+  #  block: 
+  #  - shell: "ls /tmp/hello"
+  #    #ignore_errors: yes
+  #  - debug: msg="print"
+  #- shell: "ls /tmp/hello"
+  #- debug: msg="FPGA"
+  #- name: daemon of rescue
+  #  block:
+  #  - shell: "ls /tmp/hello"
+  #  - debug: 
+  #      msg: ">>>>>>>>>>>"
+  #  rescue: 
+  #  - debug: # 只有在前面的任务执行失败后才会执行改任务
+  #      msg: "{{ip}}"
+  #  always:
+  #  - debug: #不管前面执行是否成功都会执行改任务
+  #      msg: "{{ip}}"
+  - name: block
+    block:
+    - debug: msg="the first step"
+    - set_fact:
+        flag: false
+    - debug: msg="the senond step"   #原有的变量被覆盖了，这一步是不会执行的!!!!
+    when: flag
+      

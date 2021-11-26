@@ -1,0 +1,27 @@
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/log/mongodb/mongod.log
+storage:
+  dbPath: "{{ mongodData }}"
+  journal:
+    enabled: true
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: 1
+processManagement:
+  fork: true  # fork and run in background
+  pidFilePath: /var/run/mongodb/mongod.pid  # location of pidfile
+  timeZoneInfo: /usr/share/zoneinfo
+net:
+  port: 27017
+  bindIp: 0.0.0.0  # Enter 0.0.0.0,:: to bind to all IPv4 and IPv6 addresses or, alternatively, use the net.bindIpAll setting.
+{% if flag  ==  true %}
+security:
+  authorization: enabled
+  keyFile: {{ mongodData }}/mongodb-keyfile
+replication:
+  replSetName: replica1
+  oplogSizeMB: 16384
+{% endif %}
+  

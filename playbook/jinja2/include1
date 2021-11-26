@@ -1,0 +1,55 @@
+the line  in  include1
+this  is test  of include
+#设置变量，include 时可以调用,加上without context 则不能使用改变量
+{% set one="two" %}
+{% include "include2" %}
+{#
+在这里会报错误,并且里面的for  循环也不能够执行了
+{% include "include2" without context %}
+#}
+
+#在include 一个不存在的文件时，可加上下面参数忽略错误
+{% include  "include3" ignore missing  with context %}
+
+#import  调用另一个函数里的宏(函数)
+{% import 'func_in_include' as funca with context %}
+#使用宏
+{{ funca.func1() }}
+{{ funca.func2(1,2)}} 
+如上例所示，在import宏时，显式的使用了”with context”，在使用”import”并且显式的配置”with context”时，有如下两个注意点。
+
+一、在外部定义变量的位置需要在import之前，也就是说，上例中定义outvartest变量的位置在import之前。
+
+二、只能使用上述方法一对宏进行导入，经测试，使用方法二导入宏后，即使显式的指定了”with context”，仍然无法找到对应的变量。
+
+ 
+
+注意：宏中如果包含for循环并且for循环中使用了range()函数，那么在”import”宏时则必须显式的指定”with context”，否则在ansible中渲染对应模板时，会出现包含如下信息的报错。
+
+"argument of type 'NoneType' is not iterable"
+ 
+
+注意：宏如果以一个或多个下划线开头，则表示这个宏为私有宏，这个宏不能被导入到其他文件中使用
+
+{% from 'func_in_include' import func1 as f1 %}
+{{ f1()}}
+
+#继承
+{% extends '/parent/extend' %}
+{% block test1 %}
+   test1
+{%  endblock %}
+#继承中使用super 面向对象？
+{%  block  test2 %}
+     这是我自己写的
+     {{super() -}}  这里继承父类的,加一横杠 取消换行
+     结束
+{% endblock %}
+
+
+{% for i in range(3) %}
+   {{i }}
+   {% block  test3 scoped %}
+    {{ super() -}}
+   {%  endblock %}
+{%  endfor %}

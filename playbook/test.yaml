@@ -1,0 +1,19 @@
+---
+- hosts: wz
+  tasks:
+  - debug: msg="check platfrom"
+    failed_when: (ansible_distribution != "CentOS")  or (ansible_distribution_major_version != "7")
+    #- ansible_distribution != "Ubuntu"
+    #- ansible_distribution_major_version != "7"
+ 
+  - debug: msg="F"
+    register: result
+  - debug:
+     var: result
+  - block:
+    - shell: "ls /op"
+    rescue:
+    - debug: msg="get"
+    - debug: msg="post"
+    - shell: "pwd"
+    

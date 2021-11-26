@@ -1,0 +1,106 @@
+- debug:
+    msg: "start install mongodb"
+  name: role of install mongodb
+
+- include: check_platform.yaml 
+- include: generate_mongodb_keyFile.yaml
+- include: clear.yaml
+
+- block:
+  - debug:
+      msg: "{{ansible_play_hosts_all}}"
+  - debug:
+     msg: "{{item}}:{{port}}"
+    with_items:
+    - "{{groups['mongo']}}"
+  tags: roleName
+ 
+- name: set yum repo 
+  yum_repository:
+    name: mongodb-org
+    description: "mongodb-org-o"
+    baseurl: "http://mirrors.aliyun.com/mongodb/yum/redhat/7Server/mongodb-org/4.0/x86_64/"
+    file: mongodb-org-4.0
+    enabled: yes
+    gpgcheck: no
+
+- name: yum mongodb-org
+  block:
+  - yum:
+      name: mongodb-org
+      state: installed 
+  rescue: #when yum install filed use rpm install mongodb
+  - copy:
+      scr: ../files/mongodb_rpm
+      dest: /tmp/mongodb_rpm
+  - shell: "rpm -ivh --force --nodeps /tmp/mongodb_rpm/*" 
+  - file:
+      path: /tmp/mongodb_rpm
+      state: absent
+    ignore_errors: yes
+
+- name: cate mongodb data dir
+  file:
+    path: "{{ mongodData }}"
+    state: directory
+    owner: mongod
+    group: mongod
+
+- name: copy mongod.conf
+  vars:
+    flag: false
+  template:
+    src: ../templates/mongod.conf.j2
+    dest: /etc/mongod.conf
+  notify: restart mongod
+
+- name: enable and start mongod-service
+  block:
+  - service:
+      name: mongod
+      enabled: yes
+  - service:
+      name: mongod 
+      state: started
+
+- name: copy mongodb-keyfile 
+  copy:
+    src: ../files/mongodb-keyfile
+    dest: "{{mongodData}}/mongodb-keyfile"
+    owner: mongod
+    group: mongod
+    mode: 0400
+
+- set_fact:
+    createUser: mongo 127.0.0.1/admin --eval 'db.createUser({user:"{{mongoDBUser}}",pwd:"{{mongoDBPasswd}}",roles:["root"]})'
+
+- name: create user
+  ignore_errors: yes 
+  shell: "{{createUser}}"
+  connection: local
+  run_once: yes
+
+- name: copy mongo.conf
+  vars:
+    flag: true
+  template:
+    src: ../templates/mongod.conf.j2
+    dest: /etc/mongod.conf
+  notify: restart mongod
+
+- block:
+   - set_fact:
+       rs: 'rs.initiate({"_id": "replica1","members": [{ "_id": 0,"host": "192.168.98.66:27017}, { "_id": 1,"host": "192.168.98.100:27017"},]})'
+   - template:
+       src: ../templates/init_replica.js
+       dest: /tmp/init_replica.js
+   - shell: "mongo 127.0.0.1/admin -uroot -proot /tmp/init_replica.js"
+   #- shell: mongo 127.0.0.1/admin -uroot -p --eval 'rs.initiate({"_id": "replica1","members": [{ "_id": 0,"host": "192.168.98.66:27017}, { "_id": 1,"host": "192.168.98.100:27017"},]})'
+   - community.mongodb.mongodb_shell:
+       login_user: "root"
+       login_password: "root"
+       eval: "{{rs}}" 
+       #idempotent: yes
+  ignore_errors: yes
+  connection: local
+  run_once: yes

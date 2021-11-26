@@ -1,0 +1,8 @@
+---
+- hosts: wz
+  tasks:
+  - debug: msg="get"
+    tags: get
+  - debug: msg="post"
+    tags: post
+  - debug: msg="option"

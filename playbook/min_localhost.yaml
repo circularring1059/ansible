@@ -1,0 +1,6 @@
+--- 
+- hosts: mongo
+  tasks:
+  - shell: "echo localhost  > /tmp/localhost"
+    connection: local
+    run_once: yes

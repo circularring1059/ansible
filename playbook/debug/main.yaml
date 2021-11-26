@@ -1,0 +1,10 @@
+---
+- hosts: me
+  tasks:
+  - file:
+      path: /tmp/ansible/ansilbe/
+      state: directory
+    #run_once: true
+    when: ansible_host == "192.168.98.100"
+  -  debug:
+       msg="{{hostvars.master1.groups.me}}"
